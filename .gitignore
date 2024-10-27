@@ -1,0 +1,10 @@
+#folders
+
+/node_modules
+
+
+#files
+
+.env
+package-lock.json
+logfile.log

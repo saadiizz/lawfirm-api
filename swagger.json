@@ -1,0 +1,1333 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger LawyerUp - OpenAPI 3.0",
+    "description": "This is a LawyerUp Server based on the OpenAPI 3.0 specification.",
+    "contact": {
+      "email": "taha.muhammad@gmail.com"
+    },
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001"
+    }
+  ],
+  "tags": [],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "For registering a user using phone number",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "password",
+                  "phone",
+                  "userType"
+                ],
+                "properties": {
+                  "firstName": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "userType": {
+                    "type": "string",
+                    "example": "INDIVIDUAL"
+                  },
+                  "workInfo": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "companyName": "string",
+                        "jobTitle": "string",
+                        "startDate": "dateString",
+                        "endDate": "dateString",
+                        "description": "string",
+                        "business": "busines_uid"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "On success it will return 3 key value pairs (1) token: an Api access token (2) user: an object containing the details of the user (3) newlyCreated: to verify that the user was existed before this request or it is newly created in this request"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "For login with email and password.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Api will return an access token and a user object."
+          },
+          "403": {
+            "description": "Invalid email or password OR Your account is suspended OR Too many invalid login attempts, your login with email has been locked temporarily, please login with your phone to continue "
+          }
+        }
+      }
+    },
+    "/auth/send-email-code": {
+      "post": {
+        "tags": ["Auth - Email Code"],
+        "summary": "For sending email code.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "source"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/auth/verify-email-code": {
+      "post": {
+        "tags": ["Auth - Email Code"],
+        "summary": "For verifying email code.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "source", "verificationToken"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "source": {
+                    "type": "string",
+                    "example": "EMAIL_VERIFICATION"
+                  },
+                  "verificationToken": {
+                    "type": "number",
+                    "example": "123456"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "403": {
+            "description": "Failure"
+          }
+        }
+      }
+    },
+    "/auth/update-password": {
+      "post": {
+        "tags": ["Auth - Update Password"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For updating your password.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["password"],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Failure"
+          },
+          "401": {
+            "description": "Failure"
+          }
+        }
+      }
+    },
+    "/user/me": {
+      "get": {
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting information of the current user.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/user": {
+      "patch": {
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting information of the current user.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "designation": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "profilePicture": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "roleAtCompany": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "stepsCompleted": {
+                    "type": "number",
+                    "example": "0"
+                  },
+                  "firmName": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "firmWebsite": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "billingStructure": {
+                    "type": "array",
+                    "example": ["FIXED_FEE", "ON_CONTINGENCY", "PER_HOUR"]
+                  },
+                  "ratePerHourMin": {
+                    "type": "number",
+                    "example": "1"
+                  },
+                  "ratePerHourMax": {
+                    "type": "number",
+                    "example": "2"
+                  },
+                  "represent": {
+                    "type": "array",
+                    "example": ["INDIVIDUAL", "COMPANIES"]
+                  },
+                  "practiceAreas": {
+                    "type": "object",
+                    "example": ["string"]
+                  },
+                  "practicingLawSince": {
+                    "type": "date",
+                    "example": "dateString"
+                  },
+                  "licenses": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "state": "stateId",
+                        "licenseNumber": "Li-123"
+                      }
+                    ]
+                  },
+                  "locationPermitted": {
+                    "type": "array",
+                    "example": ["stateId"]
+                  },
+                  "biography": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "languages": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "language": "languageId",
+                        "oralProficiency": "NATIVE",
+                        "writtenProficiency": "NATIVE"
+                      }
+                    ]
+                  },
+                  "socialURLs": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "kind": "string",
+                        "url": "string"
+                      }
+                    ]
+                  },
+                  "educations": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "university": "string",
+                        "degree": "string",
+                        "completedAt": "2023-04-05T22:10:43.275Z",
+                        "certificates": ["string"]
+                      }
+                    ]
+                  },
+                  "publications": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "title": "string",
+                        "link": "string",
+                        "imageUrl": "string"
+                      }
+                    ]
+                  },
+                  "awards": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "title": "string",
+                        "date": "2023-04-05T22:10:43.275Z"
+                      }
+                    ]
+                  },
+                  "associations": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "title": "string",
+                        "date": "2023-04-05T22:10:43.275Z"
+                      }
+                    ]
+                  },
+                  "experiences": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "title": "title 1",
+                        "description": "Description",
+                        "practiceAreas": ["categoryId"],
+                        "industry": "industry name",
+                        "court": "court 1"
+                      }
+                    ]
+                  },
+                  "businesses": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "name": "Business name",
+                        "businessLogo": "string",
+                        "isGeneralCounselor": true,
+                        "businessType": "LLC",
+                        "registeredDate": "2023-04-05T22:10:43.275Z",
+                        "EIN": "EIN 1",
+                        "businessPhone": "45 66539878",
+                        "website": "www.example.com",
+                        "businessDescription": "business description",
+                        "addresses": [
+                          {
+                            "address": "address detail",
+                            "officeType": "string",
+                            "addressType": "REGISTERED",
+                            "postalCode": "00112",
+                            "city": "NY",
+                            "state": "stateId",
+                            "country": "country"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "addresses": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "address": "address detail",
+                        "officeType": "string",
+                        "addressType": "REGISTERED",
+                        "postalCode": "00112",
+                        "city": "NY",
+                        "state": "stateId",
+                        "country": "country"
+                      }
+                    ]
+                  },
+                  "subscription": {
+                    "type": "string",
+                    "example": "STANDARD"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/user/{userId}": {
+      "get": {
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting user by userId.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "Unique id of the user which you want to retrieve.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/user/my-searches": {
+      "post": {
+        "tags": ["Users"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting searches of the current user.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "number"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "filters": {
+                    "type": "object",
+                    "example": {
+                      "isBookMarkedOnly": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/provider/get-stats": {
+      "post": {
+        "tags": ["Provider"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting stats of a provider.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "filters": {
+                    "type": "object",
+                    "example": {
+                      "fromDate": "dateString",
+                      "toDate": "dateString"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/businesses": {
+      "post": {
+        "tags": ["Business"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For creating a business.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "businessLogo": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "isGeneralCounselor": {
+                    "type": "boolean",
+                    "example": "false"
+                  },
+                  "businessType": {
+                    "type": "string",
+                    "example": "LLC"
+                  },
+                  "registeredDate": {
+                    "type": "string",
+                    "example": "dateString"
+                  },
+                  "EIN": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "businessPhone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "businessDescription": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "addresses": {
+                    "type": "string",
+                    "example": [
+                      {
+                        "address": "string",
+                        "officeType": "PHYSICAL",
+                        "addressType": "REGISTERED",
+                        "postalCode": "string",
+                        "city": "string",
+                        "state": "state_id",
+                        "country": "string"
+                      }
+                    ]
+                  },
+                  "isPublic": {
+                    "type": "boolean",
+                    "example": "true"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/businesses/business-list": {
+      "get": {
+        "tags": ["Business"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting a list businesses.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/businesses/{businessId}": {
+      "get": {
+        "tags": ["Business"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting a list businesses.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "businessId",
+            "in": "path",
+            "description": "Unique id of business you want to retrieve.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Business"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For updating a business.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "businessId",
+            "in": "path",
+            "description": "Unique id of business you want to update.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "businessLogo": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "isGeneralCounselor": {
+                    "type": "boolean",
+                    "example": "false"
+                  },
+                  "businessType": {
+                    "type": "string",
+                    "example": "LLC"
+                  },
+                  "registeredDate": {
+                    "type": "string",
+                    "example": "dateString"
+                  },
+                  "EIN": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "businessPhone": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "website": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "businessDescription": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "addresses": {
+                    "type": "array",
+                    "example": [
+                      {
+                        "address": "string",
+                        "officeType": "PHYSICAL",
+                        "addressType": "REGISTERED",
+                        "postalCode": "string",
+                        "city": "string",
+                        "state": "state_id",
+                        "country": "string"
+                      }
+                    ]
+                  },
+                  "isPublic": {
+                    "type": "boolean",
+                    "example": "false"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Business"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For deleting a business.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "businessId",
+            "in": "path",
+            "description": "Unique id of business you want to delete.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/search": {
+      "get": {
+        "tags": ["Search"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For searching by category and state.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "searchId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/text-search": {
+      "get": {
+        "tags": ["Search"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For searching text (smart search).",
+        "description": "",
+        "parameters": [
+          {
+            "name": "searchId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/search/{searchId}": {
+      "get": {
+        "tags": ["Search"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting search by searchId.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "searchId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Search"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For deleting search by searchId.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "searchId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/search/{searchId}/bookmark": {
+      "post": {
+        "tags": ["Bookmark"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For adding a bookmark.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "searchId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["providerId"],
+                "properties": {
+                  "providerId": {
+                    "type": "string",
+                    "example": "provider_id"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Bookmark"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For deleting a bookmark.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "searchId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["providerId"],
+                "properties": {
+                  "providerId": {
+                    "type": "string",
+                    "example": "provider_id"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/payments/subscription": {
+      "post": {
+        "tags": ["Payment"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For creating a subscription.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["paymentMethodId", "productId"],
+                "properties": {
+                  "paymentMethodId": {
+                    "type": "string",
+                    "example": "pm_id"
+                  },
+                  "productId": {
+                    "type": "string",
+                    "example": "prod_id"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/payments/plans": {
+      "get": {
+        "tags": ["Payment"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting subscription plans.",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/payments/card": {
+      "post": {
+        "tags": ["Payment"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For adding a card.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["paymentMethodId"],
+                "properties": {
+                  "paymentMethodId": {
+                    "type": "string",
+                    "example": "pm_id"
+                  },
+                  "isMarkAsDefault": {
+                    "type": "boolean",
+                    "example": "true"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/payments/cards": {
+      "get": {
+        "tags": ["Payment"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting list of user cards.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/payments/make-card-default": {
+      "post": {
+        "tags": ["Payment"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For making card default.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["paymentMethodId"],
+                "properties": {
+                  "paymentMethodId": {
+                    "type": "string",
+                    "example": "pm_id"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/payments/card/{paymentMethodId}": {
+      "delete": {
+        "tags": ["Payment"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For deleting card.",
+        "parameters": [
+          {
+            "name": "paymentMethodId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "post": {
+        "tags": ["Categories"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For creating a category.",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "isIndividual",
+                  "isBusiness",
+                  "isLocationDependent",
+                  "states"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "isIndividual": {
+                    "type": "boolean",
+                    "example": "true"
+                  },
+                  "isBusiness": {
+                    "type": "boolean",
+                    "example": "false"
+                  },
+                  "isLocationDependent": {
+                    "type": "boolean",
+                    "example": "false"
+                  },
+                  "states": {
+                    "type": "array",
+                    "example": ["state_id"]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Categories"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting categories by user type.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/categories/{categoryId}": {
+      "get": {
+        "tags": ["Categories"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting a category by categoryId.",
+        "parameters": [
+          {
+            "name": "categoryId",
+            "in": "path",
+            "description": "Unique id of the category which you want to retrieve.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/languages": {
+      "get": {
+        "tags": ["Language"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting languages.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Language"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For posting a language.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/states": {
+      "get": {
+        "tags": ["State"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For getting states.",
+        "description": "No input required for this api, just needed to be authenticated.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "tags": ["State"],
+        "security": [{ "bearerAuth": [] }],
+        "summary": "For posting a State.",
+        "description": "",
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "code"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "string"
+                  },
+                  "code": {
+                    "type": "string",
+                    "example": "lang_code"
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
